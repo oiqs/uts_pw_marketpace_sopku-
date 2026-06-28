@@ -583,14 +583,7 @@
                         </button>
                     </div>
 
-                    {/* Hint akun demo */}
-                    {mode === 'login' && (
-                        <div className="mt-5 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-700">
-                            <p className="font-semibold mb-1">💡 Akun Demo:</p>
-                            <p>Email: <strong>user@sopku.com</strong></p>
-                            <p>Password: <strong>sopku123</strong></p>
-                        </div>
-                    )}
+
                 </div>
             );
         }

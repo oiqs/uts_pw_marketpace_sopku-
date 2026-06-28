@@ -49,11 +49,14 @@ class Admin_model extends CI_Model
             'title'         => trim($data['title']),
             'description'   => trim($data['description']),
             'price'         => (float) $data['price'],
-            'image'         => trim($data['image']),
             'rating_rate'   => (float) ($data['rating_rate'] ?: 0),
             'rating_count'  => (int) ($data['rating_count'] ?: 0),
             'stock'         => (int) ($data['stock'] ?: 0),
         ];
+
+        if (isset($data['image'])) {
+            $payload['image'] = trim($data['image']);
+        }
 
         if ($id) {
             return $this->db->where('id', $id)->update('products', $payload);

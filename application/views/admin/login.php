@@ -103,13 +103,7 @@
 		</div>
 	</div>
 
-	<!-- Demo Credentials -->
-	<div class="mt-4 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-2xl px-5 py-4 text-xs text-slate-300 float">
-		<p class="font-semibold text-white mb-1">💡 Kredensial Demo:</p>
-		<p>Email: <strong class="text-blue-300">admin@sopku.com</strong></p>
-		<p>Password: <strong class="text-blue-300">admin123</strong></p>
-		<p class="mt-2">User: <strong class="text-blue-300">user@sopku.com</strong> / <strong class="text-blue-300">sopku123</strong></p>
-	</div>
+
 	<p class="text-center text-xs text-slate-500 mt-5">© 2026 SopKu Admin Panel. All rights reserved.</p>
 </div>
 

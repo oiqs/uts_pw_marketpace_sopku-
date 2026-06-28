@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php $is_edit = !empty($product); ?>
-<form method="post" action="<?= $is_edit ? base_url('admin/products/edit/' . $product['id']) : base_url('admin/products/create') ?>" class="max-w-4xl rounded-lg border border-slate-200 bg-white p-5 md:p-6">
+<form method="post" enctype="multipart/form-data" action="<?= $is_edit ? base_url('admin/products/edit/' . $product['id']) : base_url('admin/products/create') ?>" class="max-w-4xl rounded-lg border border-slate-200 bg-white p-5 md:p-6">
     <div class="grid gap-5 md:grid-cols-2">
         <label class="block md:col-span-2">
             <span class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-slate-500">Nama Produk</span>
@@ -20,8 +20,11 @@
             <input type="number" step="100" name="price" value="<?= html_escape($product['price'] ?? '') ?>" required class="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none">
         </label>
         <label class="block md:col-span-2">
-            <span class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-slate-500">URL Gambar</span>
-            <input name="image" value="<?= html_escape($product['image'] ?? '') ?>" class="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none">
+            <span class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-slate-500">Gambar Produk</span>
+            <input type="file" name="image" accept="image/*" class="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none">
+            <?php if (!empty($product['image'])): ?>
+                <div class="mt-2 text-xs text-slate-500">Gambar saat ini: <a href="<?= html_escape($product['image']) ?>" target="_blank" class="text-blue-500 hover:underline">Lihat Gambar</a></div>
+            <?php endif; ?>
         </label>
         <label class="block md:col-span-2">
             <span class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-slate-500">Deskripsi</span>

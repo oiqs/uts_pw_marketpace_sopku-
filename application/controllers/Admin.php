@@ -75,7 +75,17 @@ class Admin extends CI_Controller
     {
         $this->require_admin();
         if ($this->input->method() === 'post') {
-            $this->admin_model->save_product($this->input->post());
+            $post = $this->input->post();
+            
+            $upload = $this->_upload_image();
+            if ($upload === false) {
+                redirect('admin/product_create');
+            }
+            if ($upload) {
+                $post['image'] = base_url('uploads/' . $upload);
+            }
+
+            $this->admin_model->save_product($post);
             $this->session->set_flashdata('success', 'Produk berhasil ditambahkan.');
             redirect('admin/products');
         }
@@ -90,7 +100,17 @@ class Admin extends CI_Controller
     {
         $this->require_admin();
         if ($this->input->method() === 'post') {
-            $this->admin_model->save_product($this->input->post(), $id);
+            $post = $this->input->post();
+            
+            $upload = $this->_upload_image();
+            if ($upload === false) {
+                redirect('admin/product_edit/' . $id);
+            }
+            if ($upload) {
+                $post['image'] = base_url('uploads/' . $upload);
+            }
+
+            $this->admin_model->save_product($post, $id);
             $this->session->set_flashdata('success', 'Produk berhasil diperbarui.');
             redirect('admin/products');
         }
@@ -286,6 +306,27 @@ class Admin extends CI_Controller
     {
         if ($this->session->userdata('user_role') !== 'admin') {
             redirect('admin/login');
+        }
+    }
+
+    private function _upload_image()
+    {
+        if (empty($_FILES['image']['name'])) {
+            return null;
+        }
+
+        $config['upload_path']          = './uploads/';
+        $config['allowed_types']        = 'gif|jpg|jpeg|png|webp';
+        $config['max_size']             = 2048;
+        $config['encrypt_name']         = true;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('image')) {
+            $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
+            return false;
+        } else {
+            return $this->upload->data('file_name');
         }
     }
 
