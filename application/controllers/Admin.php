@@ -12,7 +12,7 @@ class Admin extends CI_Controller
 
     public function login()
     {
-        if ($this->session->userdata('user_role') === 'admin') {
+        if ($this->session->userdata('admin_role') === 'admin') {
             redirect('admin/dashboard');
         }
 
@@ -24,18 +24,19 @@ class Admin extends CI_Controller
 
             if ($user) {
                 $role = $user['role'] ?? 'user';
-                $this->session->set_userdata([
-                    'user_id'    => $user['id'],
-                    'user_name'  => $user['name'],
-                    'user_email' => $user['email'],
-                    'user_role'  => $role,
-                ]);
-
-                if ($role === 'admin') {
-                    redirect('admin/dashboard');
+                if ($role !== 'admin') {
+                    $this->session->set_flashdata('error', 'Akses ditolak. Anda bukan admin.');
+                    redirect('admin/login');
                 }
 
-                redirect('login');
+                $this->session->set_userdata([
+                    'admin_id'    => $user['id'],
+                    'admin_name'  => $user['name'],
+                    'admin_email' => $user['email'],
+                    'admin_role'  => $role,
+                ]);
+
+                redirect('admin/dashboard');
             }
 
             $this->session->set_flashdata('error', 'Email atau password salah.');
@@ -47,7 +48,7 @@ class Admin extends CI_Controller
 
     public function logout()
     {
-        $this->session->unset_userdata(['user_id', 'user_name', 'user_email', 'user_role']);
+        $this->session->unset_userdata(['admin_id', 'admin_name', 'admin_email', 'admin_role']);
         $this->session->set_flashdata('success', 'Anda sudah keluar dari panel admin.');
         redirect('admin/login');
     }
@@ -200,7 +201,7 @@ class Admin extends CI_Controller
     public function user_delete($id)
     {
         $this->require_admin();
-        if ((int) $id === (int) $this->session->userdata('user_id')) {
+        if ((int) $id === (int) $this->session->userdata('admin_id')) {
             $this->session->set_flashdata('error', 'Akun admin yang sedang dipakai tidak bisa dihapus.');
             redirect('admin/users');
         }
@@ -304,7 +305,7 @@ class Admin extends CI_Controller
 
     private function require_admin()
     {
-        if ($this->session->userdata('user_role') !== 'admin') {
+        if ($this->session->userdata('admin_role') !== 'admin') {
             redirect('admin/login');
         }
     }

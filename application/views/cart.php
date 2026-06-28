@@ -271,13 +271,13 @@
         /* ===================== ORDER SUMMARY ===================== */
         function OrderSummary({ items, onCheckout, showToast }) {
             const selected  = items.filter(i => i.selected);
-            const subtotal  = selected.reduce((s, i) => s + i.price * i.qty, 0);
+            const subtotal  = selected.reduce((s, i) => s + (Number(i.price) || 0) * (Number(i.qty) || 1), 0);
             const shipping  = subtotal > 0 && subtotal < 1500000 ? 15000 : 0; // Ongkir Rp 15.000 jika di bawah Rp 1.500.000
             const discount  = subtotal > 3000000 ? subtotal * 0.05 : 0;
             const [coupon, setCoupon] = useState(localStorage.getItem('sopku_promo_code') || '');
             const [couponDiscount, setCouponDiscount] = useState(0);
             const [couponMsg, setCouponMsg] = useState(null);
-            const total = subtotal + shipping - discount - couponDiscount;
+            const total = Math.max(0, subtotal + shipping - discount - couponDiscount);
 
             const applyCoupon = () => {
                 const code = coupon.trim().toUpperCase();
@@ -289,7 +289,7 @@
                 axios.post(API_BASE + 'promo/check', { code })
                     .then(res => {
                         if (res.data.valid) {
-                            const disc = subtotal * (res.data.discount_percent / 100);
+                            const disc = subtotal * ((parseFloat(res.data.discount_percent) || 0) / 100);
                             localStorage.setItem('sopku_promo_code', code);
                             setCoupon(code);
                             setCouponDiscount(disc);

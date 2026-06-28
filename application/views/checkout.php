@@ -713,10 +713,10 @@
                 'jne-reg': 15000, 'jne-yes': 35000, 'sicepat': 20000, 'jnt': 13000, 'gosend': 50000
             };
 
-            const subtotal = useMemo(() => cartItems.reduce((s, i) => s + i.price * i.qty, 0), [cartItems]);
+            const subtotal = useMemo(() => cartItems.reduce((s, i) => s + (Number(i.price) || 0) * (Number(i.qty) || 1), 0), [cartItems]);
             const discount = subtotal > 3000000 ? subtotal * 0.05 : 0;
             const ongkir = shipping.kurir ? (kurirHarga[shipping.kurir] || 0) : 0;
-            const total = subtotal - discount - promoDiscount + ongkir;
+            const total = Math.max(0, subtotal - discount - promoDiscount + ongkir);
 
             useEffect(() => {
                 if (promoCode && subtotal > 0 && promoDiscount === 0) {
@@ -733,7 +733,7 @@
                 axios.post(API_BASE + 'promo/check', { code: promoCode })
                     .then(res => {
                         if (res.data.valid) {
-                            const disc = subtotal * (res.data.discount_percent / 100);
+                            const disc = subtotal * ((parseFloat(res.data.discount_percent) || 0) / 100);
                             setPromoDiscount(disc);
                             localStorage.setItem('sopku_promo_code', promoCode);
                             setPromoMsg({ ok: true, text: `Promo ${promoCode} berhasil! Hemat Rp ${disc.toLocaleString('id-ID')}` });

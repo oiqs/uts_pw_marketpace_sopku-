@@ -149,9 +149,7 @@ class Api extends CI_Controller
             $this->json([
                 'success' => true,
                 'user' => $user,
-                'redirect_url' => (($user['role'] ?? 'user') === 'admin')
-                    ? base_url('admin/dashboard')
-                    : base_url('login'),
+                'redirect_url' => base_url('login'),
             ]);
         } else {
             $this->json(['success' => false, 'message' => 'Email atau password salah'], 401);
